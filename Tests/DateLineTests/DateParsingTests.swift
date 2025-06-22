@@ -1,54 +1,61 @@
 @testable import DateLine
-import XCTest
+import Testing
+import Foundation
 
-class DateParsingTests: XCTestCase {
+@Suite("DateParsing Tests")
+struct DateParsingTests {
   let timeZone = TimeZone(identifier: "UTC")!
   let locale = Locale(identifier: "en_US_POSIX")
 
-  func testIsoYearFormat() {
+  @Test
+  func isoYearFormat() {
     let date = Date("2009", format: .isoYear, timeZone: timeZone, locale: locale)
-    XCTAssertNotNil(date)
+    #expect(date != nil)
 
     let calendar = Calendar(identifier: .gregorian)
     let components = calendar.dateComponents([.year], from: date!)
-    XCTAssertEqual(components.year, 2009)
+    #expect(components.year == 2009)
   }
 
-  func testIsoYearMonthFormat() {
+  @Test
+  func isoYearMonthFormat() {
     let date = Date("2009-08", format: .isoYearMonth, timeZone: timeZone, locale: locale)
-    XCTAssertNotNil(date)
+    #expect(date != nil)
 
     let calendar = Calendar(identifier: .gregorian)
     let components = calendar.dateComponents([.year, .month], from: date!)
-    XCTAssertEqual(components.year, 2009)
-    XCTAssertEqual(components.month, 8)
+    #expect(components.year == 2009)
+    #expect(components.month == 8)
   }
 
-  func testIsoDateFormat() {
+  @Test
+  func isoDateFormat() {
     let date = Date("2009-08-11", format: .isoDate, timeZone: timeZone, locale: locale)
-    XCTAssertNotNil(date)
+    #expect(date != nil)
 
     let calendar = Calendar(identifier: .gregorian)
     let components = calendar.dateComponents([.year, .month, .day], from: date!)
-    XCTAssertEqual(components.year, 2009)
-    XCTAssertEqual(components.month, 8)
-    XCTAssertEqual(components.day, 11)
+    #expect(components.year == 2009)
+    #expect(components.month == 8)
+    #expect(components.day == 11)
   }
 
-  func testInvalidDateString() {
+  @Test
+  func invalidDateString() {
     let date = Date("invalid-date", format: .isoDate)
-    XCTAssertNil(date)
+    #expect(date == nil)
   }
 
-  func testCustomFormat() {
+  @Test
+  func customFormat() {
     let date = Date("2009-08-11 06:00:00", format: .custom("yyyy-MM-dd HH:mm:ss"), timeZone: timeZone, locale: locale)
-    XCTAssertNotNil(date)
+    #expect(date != nil)
 
     let formatter = DateFormatter()
     formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
     formatter.timeZone = timeZone
     formatter.locale = locale
 
-    XCTAssertEqual(formatter.string(from: date!), "2009-08-11 06:00:00")
+    #expect(formatter.string(from: date!) == "2009-08-11 06:00:00")
   }
 }

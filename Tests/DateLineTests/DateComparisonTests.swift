@@ -1,48 +1,56 @@
 @testable import DateLine
-import XCTest
+import Testing
+import Foundation
 
-class DateComparisonTests: XCTestCase {
-  var baseDate: Date!
-  var today: Date!
+@Suite("DateComparison Tests")
+struct DateComparisonTests {
   let timeZone = TimeZone(identifier: "UTC")!
   let locale = Locale(identifier: "en_US_POSIX")
-
-  override func setUp() {
-    super.setUp()
+  
+  private var testComponents: DateComponents {
     var components = DateComponents(year: 2022, month: 1, day: 7, hour: 0, minute: 0, second: 0)
     components.timeZone = timeZone
-    today = Calendar(identifier: .gregorian).date(from: components)!
+    return components
+  }
+  
+  private var baseDate: Date {
     var calendar = Calendar(identifier: .gregorian)
     calendar.timeZone = timeZone
-    // let saturday = calendar.date(from: DateComponents(year: 2022, month: 1, day: 8))!
-    baseDate = calendar.date(from: components)
+    return calendar.date(from: testComponents)!}
+  
+  private var today: Date {
+    Calendar(identifier: .gregorian).date(from: testComponents)!
   }
 
-  func testIsToday() {
+  @Test
+  func isToday() {
     let today = Date()
-    XCTAssertTrue(today.compare(.isToday))
+    #expect(today.compare(.isToday))
   }
 
-  func testIsTomorrow() {
+  @Test
+  func isTomorrow() {
     let tomorrow = Calendar.current.date(byAdding: .day, value: 1, to: Date())!
-    XCTAssertTrue(tomorrow.compare(.isTomorrow))
+    #expect(tomorrow.compare(.isTomorrow))
   }
 
-  func testIsSameDay() {
+  @Test
+  func isSameDay() {
     let sameDay = Calendar.current.date(byAdding: .hour, value: 2, to: baseDate)!
-    XCTAssertTrue(baseDate.compare(.isSameDay(as: sameDay)))
+    #expect(baseDate.compare(.isSameDay(as: sameDay)))
   }
 
-  func testIsSameMonth() {
+  @Test
+  func isSameMonth() {
     let sameMonth = Calendar.current.date(byAdding: .day, value: 10, to: baseDate)!
-    XCTAssertTrue(baseDate.compare(.isSameMonth(as: sameMonth)))
+    #expect(baseDate.compare(.isSameMonth(as: sameMonth)))
   }
 
-  func testIsWeekend() {
-    // 2022-01-08 is Saturday
+  @Test
+  func isWeekend() {
     var calendar = Calendar(identifier: .gregorian)
     calendar.timeZone = timeZone
     let saturday = calendar.date(from: DateComponents(year: 2022, month: 1, day: 8))!
-    XCTAssertTrue(saturday.compare(.isWeekend))
+    #expect(saturday.compare(.isWeekend))
   }
 }

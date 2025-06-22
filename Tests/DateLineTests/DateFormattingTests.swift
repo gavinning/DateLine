@@ -1,43 +1,48 @@
 @testable import DateLine
-import XCTest
+import Testing
+import Foundation
 
-class DateFormattingTests: XCTestCase {
-  var testDate: Date!
+@Suite("DateFormatting Tests")
+struct DateFormattingTests {
   let timeZone = TimeZone(identifier: "UTC")!
   let locale = Locale(identifier: "en_US_POSIX")
-
-  override func setUp() {
-    super.setUp()
+  
+  private var testDate: Date {
     let components = DateComponents(year: 2017, month: 3, day: 1, hour: 6, minute: 43, second: 19)
     var calendar = Calendar(identifier: .gregorian)
     calendar.timeZone = timeZone
-    testDate = calendar.date(from: components)
+    return calendar.date(from: components)!
   }
 
-  func testIsoYearFormat() {
+  @Test
+  func isoYearFormat() {
     let result = testDate.toString(format: .isoYear, timeZone: timeZone, locale: locale)
-    XCTAssertEqual(result, "2017")
+    #expect(result == "2017")
   }
 
-  func testIsoYearMonthFormat() {
+  @Test
+  func isoYearMonthFormat() {
     let result = testDate.toString(format: .isoYearMonth, timeZone: timeZone, locale: locale)
-    XCTAssertEqual(result, "2017-03")
+    #expect(result == "2017-03")
   }
 
-  func testIsoDateFormat() {
+  @Test
+  func isoDateFormat() {
     let result = testDate.toString(format: .isoDate, timeZone: timeZone, locale: locale)
-    XCTAssertEqual(result, "2017-03-01")
+    #expect(result == "2017-03-01")
   }
 
-  func testCustomFormat() {
+  @Test
+  func customFormat() {
     let result = testDate.toString(format: .custom("yyyy-MM-dd HH:mm:ss"), timeZone: timeZone, locale: locale)
-    XCTAssertEqual(result, "2017-03-01 06:43:19")
+    #expect(result == "2017-03-01 06:43:19")
   }
 
-  func testLocaleSpecificFormat() {
+  @Test
+  func localeSpecificFormat() {
     let locale = Locale(identifier: "fr_FR")
     let result = testDate.toString(format: .custom("d MMMM yyyy"), timeZone: TimeZone(identifier: "Asia/Shanghai")!, locale: locale)
     print("Actual result: \(result)")
-    XCTAssertEqual(result, "1 mars 2017")
+    #expect(result == "1 mars 2017")
   }
 }
