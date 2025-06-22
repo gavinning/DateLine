@@ -4,7 +4,7 @@ enum CalendarCache {
   static let queue = DispatchQueue(label: "com.DateLine.CalendarCache")
   nonisolated(unsafe) static var cache: [String: Calendar] = [:]
 
-  static func calendar(for timeZone: TimeZone? = nil, locale: Locale? = nil) -> Calendar {
+  static func calendar(for timeZone: TimeZone? = .current, locale: Locale? = .current) -> Calendar {
     let key = generateCacheKey(timeZone: timeZone, locale: locale)
 
     return queue.sync {
@@ -13,8 +13,8 @@ enum CalendarCache {
       }
 
       var newCalendar = Calendar.current
-      newCalendar.timeZone = timeZone ?? TimeZone.current
-      newCalendar.locale = locale ?? Locale.current
+      newCalendar.timeZone = timeZone ?? .current
+      newCalendar.locale = locale ?? .current
 
       cache[key] = newCalendar
       return newCalendar

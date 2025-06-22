@@ -4,7 +4,7 @@ enum DateFormatterCache {
   static let queue = DispatchQueue(label: "com.DateLine.DateFormatterCache")
   nonisolated(unsafe) static var cache: [String: DateFormatter] = [:]
 
-  static func formatter(for format: DateFormat, timeZone: TimeZone?, locale: Locale?, isLenient: Bool) -> DateFormatter {
+  static func formatter(for format: DateFormat, timeZone: TimeZone? = .current, locale: Locale? = .current, isLenient: Bool) -> DateFormatter {
     let key = generateCacheKey(format: format, timeZone: timeZone, locale: locale, isLenient: isLenient)
 
     return queue.sync {
@@ -14,7 +14,7 @@ enum DateFormatterCache {
 
       let newFormatter = DateFormatter()
       newFormatter.dateFormat = format.formatString
-      newFormatter.timeZone = timeZone ?? TimeZone.current
+      newFormatter.timeZone = timeZone ?? .current
       newFormatter.locale = locale ?? Locale.current
       newFormatter.isLenient = isLenient
 

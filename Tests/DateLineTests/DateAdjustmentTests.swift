@@ -16,7 +16,9 @@ class DateAdjustmentTests: XCTestCase {
 
   func testStartOfDay() {
     let result = baseDate.adjust(for: .startOfDay)
-    let components = Calendar.current.dateComponents([.hour, .minute, .second], from: result)
+    var calendar = Calendar(identifier: .gregorian)
+    calendar.timeZone = timeZone
+    let components = calendar.dateComponents([.hour, .minute, .second], from: result)
     XCTAssertEqual(components.hour, 0)
     XCTAssertEqual(components.minute, 0)
     XCTAssertEqual(components.second, 0)
@@ -24,7 +26,9 @@ class DateAdjustmentTests: XCTestCase {
 
   func testEndOfDay() {
     let result = baseDate.adjust(for: .endOfDay)
-    let components = Calendar.current.dateComponents([.hour, .minute, .second], from: result)
+    var calendar = Calendar(identifier: .gregorian)
+    calendar.timeZone = timeZone
+    let components = calendar.dateComponents([.hour, .minute, .second], from: result)
     XCTAssertEqual(components.hour, 23)
     XCTAssertEqual(components.minute, 59)
     XCTAssertEqual(components.second, 59)
@@ -32,20 +36,26 @@ class DateAdjustmentTests: XCTestCase {
 
   func testStartOfMonth() {
     let result = baseDate.adjust(for: .startOfMonth)
-    let components = Calendar.current.dateComponents([.day], from: result)
+    var calendar = Calendar(identifier: .gregorian)
+    calendar.timeZone = timeZone
+    let components = calendar.dateComponents([.day], from: result)
     XCTAssertEqual(components.day, 1)
   }
 
   func testEndOfMonth() {
     let result = baseDate.adjust(for: .endOfMonth)
-    let components = Calendar.current.dateComponents([.day], from: result)
+    var calendar = Calendar(identifier: .gregorian)
+    calendar.timeZone = timeZone
+    let components = calendar.dateComponents([.day], from: result)
     XCTAssertEqual(components.day, 31)
   }
 
   func testNearestMinute() {
-    let date = Calendar.current.date(from: DateComponents(hour: 18, minute: 40))!
+    var calendar = Calendar(identifier: .gregorian)
+    calendar.timeZone = timeZone
+    let date = calendar.date(from: DateComponents(hour: 18, minute: 40))!
     let result = date.adjust(for: .nearestMinute(minute: 30))
-    let components = Calendar.current.dateComponents([.minute], from: result)
+    let components = calendar.dateComponents([.minute], from: result)
     XCTAssertEqual(components.minute, 30)
   }
 }

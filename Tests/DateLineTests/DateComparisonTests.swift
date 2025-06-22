@@ -14,7 +14,7 @@ class DateComparisonTests: XCTestCase {
     today = Calendar(identifier: .gregorian).date(from: components)!
     var calendar = Calendar(identifier: .gregorian)
     calendar.timeZone = timeZone
-    let saturday = calendar.date(from: DateComponents(year: 2022, month: 1, day: 8))!
+    // let saturday = calendar.date(from: DateComponents(year: 2022, month: 1, day: 8))!
     baseDate = calendar.date(from: components)
   }
 
