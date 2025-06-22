@@ -15,6 +15,28 @@ public extension Date {
 }
 
 public extension Date {
+  var last7Days: [Date] {
+    lastDays(7)
+  }
+
+  var last30Days: [Date] {
+    lastDays(30)
+  }
+
+  var last7Date: [String] {
+    last7Days.map { $0.localeDate }
+  }
+
+  var last30Date: [String] {
+    last30Days.map { $0.localeDate }
+  }
+
+  func lastDays(_ count: Int) -> [Date] {
+    (1...count).map { self.addingTimeInterval(TimeInterval(-$0 * 24 * 60 * 60)) }
+  }
+}
+
+public extension Date {
   var startOfDay: Date {
     adjust(for: .startOfDay)
   }

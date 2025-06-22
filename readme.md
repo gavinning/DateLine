@@ -127,3 +127,18 @@ firstDate.compare(.isLater(than: secondDate))
 "2022-01-07 19:28:49" == "2022-01-07 19:27:49"
 "2022-01-07 19:26:49" != "2022-01-07 19:27:49"
 ```
+
+
+## 其他
+
+```swift
+let date = Date("2025-10-01 10:00:00", format: .cnDateTime)!
+
+let last7Days = date.last7Days.sorted { $0 < $1 }.map{ $0.localeDate }
+["2025-09-25", "2025-09-26", "2025-09-27", "2025-09-28", "2025-09-29", "2025-09-30", "2025-10-01"]
+
+date.last7Days -> [Date]
+date.last30Days -> [Date]
+date.last7Date -> [String]
+date.last30Date -> [String]
+```
