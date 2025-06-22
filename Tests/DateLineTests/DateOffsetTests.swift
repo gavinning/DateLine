@@ -15,7 +15,7 @@ class DateOffsetTests: XCTestCase {
   }
 
   func testOffsetSecond() {
-    let result = baseDate.offset(.second, value: 10)
+    let result = baseDate.add(10, .second)
     var calendar = Calendar(identifier: .gregorian)
     calendar.timeZone = timeZone
     let components = calendar.dateComponents([.second], from: result)
@@ -23,7 +23,7 @@ class DateOffsetTests: XCTestCase {
   }
 
   func testOffsetMinute() {
-    let result = baseDate.offset(.minute, value: 10)
+    let result = baseDate.add(10, .minute)
     var calendar = Calendar(identifier: .gregorian)
     calendar.timeZone = timeZone
     let components = calendar.dateComponents([.minute], from: result)
@@ -31,7 +31,7 @@ class DateOffsetTests: XCTestCase {
   }
 
   func testOffsetDay() {
-    let result = baseDate.offset(.day, value: 1)
+    let result = baseDate.add(1, .day)
     var calendar = Calendar(identifier: .gregorian)
     calendar.timeZone = timeZone
     let components = calendar.dateComponents([.day], from: result)
@@ -39,7 +39,7 @@ class DateOffsetTests: XCTestCase {
   }
 
   func testOffsetMonth() {
-    let result = baseDate.offset(.month, value: 2)
+    let result = baseDate.add(2, .month)
     var calendar = Calendar(identifier: .gregorian)
     calendar.timeZone = timeZone
     let components = calendar.dateComponents([.month, .year], from: result)
@@ -48,7 +48,7 @@ class DateOffsetTests: XCTestCase {
   }
 
   func testNegativeOffsetYear() {
-    let result = baseDate.offset(.year, value: -2)
+    let result = baseDate.add(-2, .year)
     var calendar = Calendar(identifier: .gregorian)
     calendar.timeZone = timeZone
     let components = calendar.dateComponents([.year], from: result)

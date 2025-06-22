@@ -4,65 +4,49 @@
 ### 格式化
 
 ```swift
- Date(fromString: "2009", format: .isoYear)
- Date(fromString: "2009-08", format: .isoYearMonth)
- Date(fromString: "2009-08-11", format: .isoDate)
- Date(fromString: "2009-08-11T06:00:00-07:00", format: .isoDateTime)
- Date(fromString: "2009-08-11T06:00:00.000-07:00", format: .isoDateTimeFull)
- Date(fromString: "2009-08-11 06:00:00", format: .custom("yyyy-MM-dd HH:mm:ss"))
+Date("2009", format: .isoYear)
+Date("2009-08", format: .isoYearMonth)
+Date("2009-08-11", format: .isoDate)
+Date("2009-08-11T06:00:00-07:00", format: .isoDateTime)
+Date("2009-08-11T06:00:00.000-07:00", format: .isoDateTimeFull)
+Date("2009-08-11 06:00:00", format: .cnDateTime)
+Date("2009-08-11 06:00:00", format: .custom("yyyy-MM-dd HH:mm:ss"))
 ```
 
-## 转字符串
+## 字符串转换
 
 ```swift
-Date().toString(format: .isoYear)
-"2017"
-Date().toString(format: .isoYearMonth)
-"2017-03"
-Date().toString(format: .isoDate)
-"2017-03-01"
-Date().toString(format: .isoDateTime)
-"2017-03-01T06:43:19-05:00"
-Date().toString(format: .isoDateTimeFull)
-"2017-03-01T06:43:19.000-05:00"
-Date().toString(format: .custom("yyyy-MM-dd HH:mm:ss"))
-"2017-03-01 06:43:19"
+Date().toString(format: .isoYear) // "2017"
+Date().toString(format: .isoYearMonth) // "2017-03"
+Date().toString(format: .isoDate) // "2017-03-01"
+Date().toString(format: .isoDateTime) // "2017-03-01T06:43:19-05:00"
+Date().toString(format: .isoDateTimeFull) // "2017-03-01T06:43:19.000-05:00"
+Date().toString(format: .custom("yyyy-MM-dd HH:mm:ss")) // "2017-03-01 06:43:19"
 
-Date().localeDateTime
-"2017-03-01 06:43:19"
+Date().localeDateTime // "2017-03-01 06:43:19"
+Date().localeDate // "2017-03-01"
+Date().localeTime // "06:43:19"
 ```
 
 ```swift
-Date().toString(format: .custom("MMM d, yyyy"))
-"Mar 1, 2017"
-Date().toString(format: .custom("h:mm a"))
-"6:43 AM"
-Date().toString(format: .custom("MMM d"))
-"Wed Mar 1"
+Date().toString(format: .custom("MMM d, yyyy")) // "Mar 1, 2017"
+Date().toString(format: .custom("h:mm a")) // "6:43 AM"
+Date().toString(format: .custom("MMM d")) // "Wed Mar 1"
 ```
 
 
 ### 时间偏移
 
 ```swift 
-Date().offset(.second, value: 10)
-"18:14:41" -> "18:14:51"
-Date().offset(.minute, value: 10)
-"18:14:41" -> "18:24:41"
-Date().offset(.hour, value: 2)
-"18:14:41" -> "20:14:41"
-Date().offset(.day, value: 1)
-"2009-12-06" -> "2009-12-07"
-Date().offset(.weekday, value: 2)
-"2009-12-06" -> "2009-16-06"
-Date().offset(.weekdayOrdinal, value: 1)
-"2009-12-06" -> "2009-12-20"
-Date().offset(.week, value: -2)
-"2009-12-06" ->  "2009-11-22"
-Date().offset(.month, value: 2)
-"2009-12-06" -> "2010-02-06"
-Date().offset(.year, value: -2)
-"2009-12-06" -> "2007-12-06"
+Date().add(10, .second)  // "18:14:41" -> "18:14:51"
+Date().add(10, .minute)  // "18:14:41" -> "18:24:41"
+Date().add(2, .hou)     // "18:14:41" -> "20:14:41"
+Date().add(1, .day)      // "2009-12-06" -> "2009-12-07"
+Date().add(2, .weekday)  //"2009-12-06" -> "2009-16-06"
+Date().add(1, .weekdayOrdinal) // "2009-12-06" -> "2009-12-20"
+Date().add(-2, .week)    // "2009-12-06" ->  "2009-11-22"
+Date().add(2, .month)    // "2009-12-06" -> "2010-02-06"
+Date().add(-2, .year)    // "2009-12-06" -> "2007-12-06"
 ```
 
 

@@ -6,7 +6,7 @@ class DateParsingTests: XCTestCase {
   let locale = Locale(identifier: "en_US_POSIX")
 
   func testIsoYearFormat() {
-    let date = Date(fromString: "2009", format: .isoYear, timeZone: timeZone, locale: locale)
+    let date = Date("2009", format: .isoYear, timeZone: timeZone, locale: locale)
     XCTAssertNotNil(date)
 
     let calendar = Calendar(identifier: .gregorian)
@@ -15,7 +15,7 @@ class DateParsingTests: XCTestCase {
   }
 
   func testIsoYearMonthFormat() {
-    let date = Date(fromString: "2009-08", format: .isoYearMonth, timeZone: timeZone, locale: locale)
+    let date = Date("2009-08", format: .isoYearMonth, timeZone: timeZone, locale: locale)
     XCTAssertNotNil(date)
 
     let calendar = Calendar(identifier: .gregorian)
@@ -25,7 +25,7 @@ class DateParsingTests: XCTestCase {
   }
 
   func testIsoDateFormat() {
-    let date = Date(fromString: "2009-08-11", format: .isoDate, timeZone: timeZone, locale: locale)
+    let date = Date("2009-08-11", format: .isoDate, timeZone: timeZone, locale: locale)
     XCTAssertNotNil(date)
 
     let calendar = Calendar(identifier: .gregorian)
@@ -36,12 +36,12 @@ class DateParsingTests: XCTestCase {
   }
 
   func testInvalidDateString() {
-    let date = Date(fromString: "invalid-date", format: .isoDate)
+    let date = Date("invalid-date", format: .isoDate)
     XCTAssertNil(date)
   }
 
   func testCustomFormat() {
-    let date = Date(fromString: "2009-08-11 06:00:00", format: .custom("yyyy-MM-dd HH:mm:ss"), timeZone: timeZone, locale: locale)
+    let date = Date("2009-08-11 06:00:00", format: .custom("yyyy-MM-dd HH:mm:ss"), timeZone: timeZone, locale: locale)
     XCTAssertNotNil(date)
 
     let formatter = DateFormatter()

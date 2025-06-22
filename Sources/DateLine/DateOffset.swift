@@ -43,7 +43,7 @@ public extension Date {
   ///   - timeZone: 时区（可选，默认为当前时区）
   ///   - locale: 地区（可选，默认为当前地区）
   /// - Returns: 偏移后的日期
-  func offset(_ component: OffsetComponent, value: Int, timeZone: TimeZone? = nil, locale: Locale? = nil) -> Date {
+  func add(_ value: Int, _ component: OffsetComponent, timeZone: TimeZone? = nil, locale: Locale? = nil) -> Date {
     let calendar = CalendarCache.calendar(for: timeZone, locale: locale)
     return calendar.date(byAdding: component.calendarUnit, value: value, to: self) ?? self
   }
