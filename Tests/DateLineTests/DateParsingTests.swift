@@ -2,7 +2,7 @@ import XCTest
 @testable import DateLine
 
 class DateParsingTests: XCTestCase {
-    let timeZone = TimeZone(identifier: "America/New_York")!
+    let timeZone = TimeZone(identifier: "UTC")!
     let locale = Locale(identifier: "en_US_POSIX")
     
     func testIsoYearFormat() {

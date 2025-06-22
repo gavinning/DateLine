@@ -9,7 +9,9 @@ class DateAdjustmentTests: XCTestCase {
     override func setUp() {
         super.setUp()
         let components = DateComponents(year: 2009, month: 12, day: 6, hour: 18, minute: 14, second: 41)
-        self.baseDate = Calendar(identifier: .gregorian).date(from: components)
+        var calendar = Calendar(identifier: .gregorian)
+        calendar.timeZone = timeZone
+        self.baseDate = calendar.date(from: components)
     }
     
     func testStartOfDay() {

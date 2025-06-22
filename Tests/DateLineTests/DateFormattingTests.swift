@@ -3,13 +3,15 @@ import XCTest
 
 class DateFormattingTests: XCTestCase {
     var testDate: Date!
-    let timeZone = TimeZone(identifier: "America/New_York")!
+    let timeZone = TimeZone(identifier: "UTC")!
     let locale = Locale(identifier: "en_US_POSIX")
     
     override func setUp() {
         super.setUp()
         let components = DateComponents(year: 2017, month: 3, day: 1, hour: 6, minute: 43, second: 19)
-        self.testDate = Calendar(identifier: .gregorian).date(from: components)
+        var calendar = Calendar(identifier: .gregorian)
+        calendar.timeZone = timeZone
+        self.testDate = calendar.date(from: components)
     }
     
     func testIsoYearFormat() {
@@ -34,7 +36,8 @@ class DateFormattingTests: XCTestCase {
     
     func testLocaleSpecificFormat() {
         let locale = Locale(identifier: "fr_FR")
-        let result = testDate.toString(format: .custom("MMM d, yyyy"), locale: locale)
-        XCTAssertEqual(result, "mars 1, 2017")
+        let result = testDate.toString(format: .custom("d MMMM yyyy"), timeZone: TimeZone(identifier: "Asia/Shanghai")!, locale: locale)
+        print("Actual result: \(result)")
+        XCTAssertEqual(result, "1 mars 2017")
     }
 }

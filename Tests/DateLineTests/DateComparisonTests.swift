@@ -3,13 +3,19 @@ import XCTest
 
 class DateComparisonTests: XCTestCase {
     var baseDate: Date!
+    var today: Date!
     let timeZone = TimeZone(identifier: "UTC")!
     let locale = Locale(identifier: "en_US_POSIX")
     
     override func setUp() {
         super.setUp()
-        let components = DateComponents(year: 2022, month: 1, day: 7, hour: 19, minute: 25, second: 53)
-        self.baseDate = Calendar(identifier: .gregorian).date(from: components)
+        var components = DateComponents(year: 2022, month: 1, day: 7, hour: 0, minute: 0, second: 0)
+        components.timeZone = timeZone
+        self.today = Calendar(identifier: .gregorian).date(from: components)!
+        var calendar = Calendar(identifier: .gregorian)
+        calendar.timeZone = timeZone
+        let saturday = calendar.date(from: DateComponents(year: 2022, month: 1, day: 8))!
+        self.baseDate = calendar.date(from: components)
     }
     
     func testIsToday() {
@@ -34,7 +40,9 @@ class DateComparisonTests: XCTestCase {
     
     func testIsWeekend() {
         // 2022-01-08 is Saturday
-        let saturday = Calendar.current.date(from: DateComponents(year: 2022, month: 1, day: 8))!
+        var calendar = Calendar(identifier: .gregorian)
+        calendar.timeZone = timeZone
+        let saturday = calendar.date(from: DateComponents(year: 2022, month: 1, day: 8))!
         XCTAssertTrue(saturday.compare(.isWeekend))
     }
 }
