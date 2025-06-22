@@ -5,6 +5,7 @@ import PackageDescription
 
 let package = Package(
     name: "DateLine",
+    // version: "0.0.1",
     products: [
         // Products define the executables and libraries a package produces, making them visible to other packages.
         .library(
