@@ -8,7 +8,7 @@ final class DateFormatterCache {
 
   private init() {}
 
-  func formatter(for format: DateFormat, timeZone: TimeZone? = TimeZone(identifier: "UTC"), locale: Locale? = Locale(identifier: "en_US_POSIX"), isLenient: Bool = false) -> DateFormatter {
+  func formatter(for format: DateFormat, timeZone: TimeZone? = .current, locale: Locale? = .current, isLenient: Bool = false) -> DateFormatter {
     let key = generateCacheKey(format: format, timeZone: timeZone, locale: locale, isLenient: isLenient)
 
     return queue.sync {

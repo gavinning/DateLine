@@ -28,12 +28,6 @@ Date().localeDate // "2017-03-01"
 Date().localeTime // "06:43:19"
 ```
 
-```swift
-Date().toString(format: .custom("MMM d, yyyy")) // "Mar 1, 2017"
-Date().toString(format: .custom("h:mm a")) // "6:43 AM"
-Date().toString(format: .custom("MMM d")) // "Wed Mar 1"
-```
-
 
 ### 时间偏移
 
@@ -126,6 +120,34 @@ firstDate.compare(.isEarlier(than: secondDate))
 firstDate.compare(.isLater(than: secondDate))
 "2022-01-07 19:28:49" == "2022-01-07 19:27:49"
 "2022-01-07 19:26:49" != "2022-01-07 19:27:49"
+```
+
+
+## 快捷方式
+
+```swift
+Date().localeDate // "2022-01-07"
+Date().localeTime // "19:26:49"
+Date().localeDateTime // "2022-01-07 19:26:49"
+
+Date().startOfDay
+Date().endOfDay
+Date().startOfWeek
+Date().endOfWeek
+Date().startOfMonth
+Date().endOfMonth
+Date().startOfYear
+Date().endOfYear
+
+Date().tomorrow
+Date().yesterday
+
+Date().isToday
+Date().isTomorrow
+Date().isYesterday
+Date().isThisWeek
+Date().isNextWeek
+Date().isLastWeek
 ```
 
 
