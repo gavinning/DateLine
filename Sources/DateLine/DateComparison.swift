@@ -29,7 +29,7 @@ public extension Date {
   ///   - locale: 地区（可选，默认为当前地区）
   /// - Returns: 比较结果（布尔值）
   func compare(_ comparison: DateComparison, timeZone: TimeZone = .current, locale: Locale = .current) -> Bool {
-    let calendar = CalendarCache.calendar(for: timeZone, locale: locale)
+    let calendar = CalendarCache.shared.calendar(for: timeZone, locale: locale)
     let now = Date()
 
     switch comparison {

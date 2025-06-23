@@ -35,90 +35,194 @@ public extension Date {
   ///   - locale: 地区（可选，默认为当前地区）
   /// - Returns: 调整后的日期
   func adjust(for adjustment: DateAdjustment, timeZone: TimeZone? = nil, locale: Locale? = nil) -> Date {
-    let calendar = CalendarCache.calendar(for: timeZone, locale: locale)
-    var components = calendar.dateComponents([.year, .month, .day, .hour, .minute, .second], from: self)
-
+    let calendar = CalendarCache.shared.calendar(for: timeZone, locale: locale)
+    
     switch adjustment {
     case .startOfDay:
-      components.hour = 0
-      components.minute = 0
-      components.second = 0
-      return calendar.date(from: components) ?? self
-
+      return calculateStartOfDay(calendar: calendar)
     case .endOfDay:
-      components.hour = 23
-      components.minute = 59
-      components.second = 59
-      return calendar.date(from: components) ?? self
-
+      return calculateEndOfDay(calendar: calendar)
     case .startOfWeek:
-      let currentWeekday = calendar.component(.weekday, from: self)
-      let daysToSubtract = (currentWeekday - calendar.firstWeekday + 7) % 7
-      return calendar.date(byAdding: .day, value: -daysToSubtract, to: startOfDay(timeZone: timeZone, locale: locale)) ?? self
-
+      return calculateStartOfWeek(calendar: calendar)
     case .endOfWeek:
-      let currentWeekday = calendar.component(.weekday, from: self)
-      let daysToAdd = (calendar.firstWeekday - currentWeekday + 6) % 7
-      return calendar.date(byAdding: .day, value: daysToAdd, to: endOfDay(timeZone: timeZone, locale: locale)) ?? self
-
+      return calculateEndOfWeek(calendar: calendar)
     case .startOfMonth:
-      components.day = 1
-      components.hour = 0
-      components.minute = 0
-      components.second = 0
-      return calendar.date(from: components) ?? self
-
+      return calculateStartOfMonth(calendar: calendar)
     case .endOfMonth:
-      guard let nextMonth = calendar.date(byAdding: .month, value: 1, to: startOfMonth(timeZone: timeZone, locale: locale)) else { return self }
-      return calendar.date(byAdding: .day, value: -1, to: nextMonth)?.endOfDay(timeZone: timeZone, locale: locale) ?? self
-
+      return calculateEndOfMonth(calendar: calendar)
     case .startOfYear:
-      components.month = 1
-      components.day = 1
-      components.hour = 0
-      components.minute = 0
-      components.second = 0
-      return calendar.date(from: components) ?? self
-
+      return calculateStartOfYear(calendar: calendar)
     case .endOfYear:
-      components.month = 12
-      components.day = 31
-      components.hour = 23
-      components.minute = 59
-      components.second = 59
-      return calendar.date(from: components) ?? self
-
+      return calculateEndOfYear(calendar: calendar)
     case .tomorrow:
-      return calendar.date(byAdding: .day, value: 1, to: self) ?? self
-
+      return calculateTomorrow(calendar: calendar)
     case .yesterday:
-      return calendar.date(byAdding: .day, value: -1, to: self) ?? self
-
-    case let .nearestMinute(minute):
-      let currentMinute = calendar.component(.minute, from: self)
-      let difference = currentMinute % minute
-      let shouldRoundUp = difference > minute / 2
-      let adjustmentValue = shouldRoundUp ? (minute - difference) : -difference
-      return calendar.date(byAdding: .minute, value: adjustmentValue, to: self) ?? self
-
-    case let .nearestHour(hour):
-      let currentHour = calendar.component(.hour, from: self)
-      let difference = currentHour % hour
-      let shouldRoundUp = difference > hour / 2
-      let adjustmentValue = shouldRoundUp ? (hour - difference) : -difference
-      return calendar.date(byAdding: .hour, value: adjustmentValue, to: self) ?? self
+      return calculateYesterday(calendar: calendar)
+    case .nearestMinute(let minute):
+      return calculateNearestMinute(calendar: calendar, minute: minute)
+    case .nearestHour(let hour):
+      return calculateNearestHour(calendar: calendar, hour: hour)
     }
   }
-
-  private func startOfDay(timeZone: TimeZone?, locale: Locale?) -> Date {
-    adjust(for: .startOfDay, timeZone: timeZone, locale: locale)
+  
+  private func calculateStartOfDay(calendar: Calendar) -> Date {
+    var components = calendar.dateComponents([.year, .month, .day], from: self)
+    components.hour = 0
+    components.minute = 0
+    components.second = 0
+    guard let date = calendar.date(from: components) else {
+      assertionFailure("Failed to calculate startOfDay for date: \(self)")
+      return self
+    }
+    return date
   }
-
-  private func endOfDay(timeZone: TimeZone?, locale: Locale?) -> Date {
-    adjust(for: .endOfDay, timeZone: timeZone, locale: locale)
+  
+  private func calculateEndOfDay(calendar: Calendar) -> Date {
+    var components = calendar.dateComponents([.year, .month, .day], from: self)
+    components.hour = 23
+    components.minute = 59
+    components.second = 59
+    guard let date = calendar.date(from: components) else {
+      assertionFailure("Failed to calculate endOfDay for date: \(self)")
+      return self
+    }
+    return date
   }
-
-  private func startOfMonth(timeZone: TimeZone?, locale: Locale?) -> Date {
-    adjust(for: .startOfMonth, timeZone: timeZone, locale: locale)
+  
+  private func calculateStartOfWeek(calendar: Calendar) -> Date {
+    let currentWeekday = calendar.component(.weekday, from: self)
+    let daysToSubtract = (currentWeekday - calendar.firstWeekday + 7) % 7
+    guard let startOfWeek = calendar.date(byAdding: .day, value: -daysToSubtract, to: calculateStartOfDay(calendar: calendar)) else {
+      assertionFailure("Failed to calculate startOfWeek for date: \(self)")
+      return self
+    }
+    return startOfWeek
+  }
+  
+  private func calculateEndOfWeek(calendar: Calendar) -> Date {
+    let currentWeekday = calendar.component(.weekday, from: self)
+    let daysToAdd = (calendar.firstWeekday - currentWeekday + 6) % 7
+    guard let endOfWeek = calendar.date(byAdding: .day, value: daysToAdd, to: calculateEndOfDay(calendar: calendar)) else {
+      assertionFailure("Failed to calculate endOfWeek for date: \(self)")
+      return self
+    }
+    return endOfWeek
+  }
+  
+  private func calculateStartOfMonth(calendar: Calendar) -> Date {
+    var components = calendar.dateComponents([.year, .month], from: self)
+    components.day = 1
+    components.hour = 0
+    components.minute = 0
+    components.second = 0
+    guard let date = calendar.date(from: components) else {
+      assertionFailure("Failed to calculate startOfMonth for date: \(self)")
+      return self
+    }
+    return date
+  }
+  
+  private func calculateEndOfMonth(calendar: Calendar) -> Date {
+    guard let startOfMonth = calendar.date(from: calendar.dateComponents([.year, .month], from: self)) else {
+      assertionFailure("Failed to get startOfMonth components for date: \(self)")
+      return self
+    }
+    guard let nextMonth = calendar.date(byAdding: .month, value: 1, to: startOfMonth) else {
+      assertionFailure("Failed to calculate nextMonth for date: \(self)")
+      return self
+    }
+    guard let endOfMonth = calendar.date(byAdding: .day, value: -1, to: nextMonth) else {
+      assertionFailure("Failed to calculate endOfMonth for date: \(self)")
+      return self
+    }
+    return calculateEndOfDay(calendar: calendar, date: endOfMonth)
+  }
+  
+  private func calculateStartOfYear(calendar: Calendar) -> Date {
+    var components = calendar.dateComponents([.year], from: self)
+    components.month = 1
+    components.day = 1
+    components.hour = 0
+    components.minute = 0
+    components.second = 0
+    guard let date = calendar.date(from: components) else {
+      assertionFailure("Failed to calculate startOfYear for date: \(self)")
+      return self
+    }
+    return date
+  }
+  
+  private func calculateEndOfYear(calendar: Calendar) -> Date {
+    var components = calendar.dateComponents([.year], from: self)
+    components.month = 12
+    components.day = 31
+    components.hour = 23
+    components.minute = 59
+    components.second = 59
+    guard let date = calendar.date(from: components) else {
+      assertionFailure("Failed to calculate endOfYear for date: \(self)")
+      return self
+    }
+    return date
+  }
+  
+  private func calculateTomorrow(calendar: Calendar) -> Date {
+    guard let tomorrow = calendar.date(byAdding: .day, value: 1, to: self) else {
+      assertionFailure("Failed to calculate tomorrow for date: \(self)")
+      return self
+    }
+    return tomorrow
+  }
+  
+  private func calculateYesterday(calendar: Calendar) -> Date {
+    guard let yesterday = calendar.date(byAdding: .day, value: -1, to: self) else {
+      assertionFailure("Failed to calculate yesterday for date: \(self)")
+      return self
+    }
+    return yesterday
+  }
+  
+  private func calculateNearestMinute(calendar: Calendar, minute: Int) -> Date {
+    guard minute > 0 else {
+      assertionFailure("Minute must be positive: \(minute)")
+      return self
+    }
+    let currentMinute = calendar.component(.minute, from: self)
+    let difference = currentMinute % minute
+    let shouldRoundUp = difference > minute / 2
+    let adjustmentValue = shouldRoundUp ? (minute - difference) : -difference
+    guard let adjustedDate = calendar.date(byAdding: .minute, value: adjustmentValue, to: self) else {
+      assertionFailure("Failed to calculate nearestMinute for date: \(self), minute: \(minute)")
+      return self
+    }
+    return adjustedDate
+  }
+  
+  private func calculateNearestHour(calendar: Calendar, hour: Int) -> Date {
+    guard hour > 0 else {
+      assertionFailure("Hour must be positive: \(hour)")
+      return self
+    }
+    let currentHour = calendar.component(.hour, from: self)
+    let difference = currentHour % hour
+    let shouldRoundUp = difference > hour / 2
+    let adjustmentValue = shouldRoundUp ? (hour - difference) : -difference
+    guard let adjustedDate = calendar.date(byAdding: .hour, value: adjustmentValue, to: self) else {
+      assertionFailure("Failed to calculate nearestHour for date: \(self), hour: \(hour)")
+      return self
+    }
+    return adjustedDate
+  }
+  
+  private func calculateEndOfDay(calendar: Calendar, date: Date) -> Date {
+    var components = calendar.dateComponents([.year, .month, .day], from: date)
+    components.hour = 23
+    components.minute = 59
+    components.second = 59
+    guard let endOfDay = calendar.date(from: components) else {
+      assertionFailure("Failed to calculate endOfDay for date: \(date)")
+      return date
+    }
+    return endOfDay
   }
 }

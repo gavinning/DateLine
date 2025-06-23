@@ -6,7 +6,7 @@ import Foundation
 struct DateOffsetTests {
   let timeZone = TimeZone(identifier: "UTC")!
   let locale = Locale(identifier: "en_US_POSIX")
-  
+
   private var baseDate: Date {
     let components = DateComponents(year: 2009, month: 12, day: 6, hour: 18, minute: 14, second: 41)
     var calendar = Calendar(identifier: .gregorian)

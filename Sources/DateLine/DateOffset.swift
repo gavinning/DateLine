@@ -38,13 +38,13 @@ public enum OffsetComponent {
 public extension Date {
   /// 偏移日期组件
   /// - Parameters:
-  ///   - component: 要偏移的日期组件
   ///   - value: 偏移值（正数向前，负数向后）
+  ///   - component: 要偏移的日期组件
   ///   - timeZone: 时区（可选，默认为当前时区）
   ///   - locale: 地区（可选，默认为当前地区）
   /// - Returns: 偏移后的日期
   func add(_ value: Int, _ component: OffsetComponent, timeZone: TimeZone? = nil, locale: Locale? = nil) -> Date {
-    let calendar = CalendarCache.calendar(for: timeZone, locale: locale)
+    let calendar = CalendarCache.shared.calendar(for: timeZone, locale: locale)
     return calendar.date(byAdding: component.calendarUnit, value: value, to: self) ?? self
   }
 }
